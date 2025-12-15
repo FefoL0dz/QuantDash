@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useFilters } from '../context/FilterContext';
-import { generateRandomWalk, calculateBollingerBands } from '../services/math-utils';
+import { generateRandomWalk, calculateBollingerBands, calculateRSI } from '../services/math-utils';
 
 export const useMarketData = () => {
     const { filters } = useFilters();
@@ -43,7 +43,8 @@ export const useMarketData = () => {
         }));
 
         // 2. Math Analysis
-        const finalData = calculateBollingerBands(convertedData, 10); // Window 10
+        const withBollinger = calculateBollingerBands(convertedData, 10);
+        const finalData = calculateRSI(withBollinger, 14);
 
         setData(finalData);
     }, [rawData, filters.currency]); // Re-run if raw data changes OR currency changes

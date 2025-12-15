@@ -139,10 +139,10 @@ const Dashboard = () => {
                             // Specific logic per widget type
                             // In a real generic system, we might pass the entire 'data' object and let widgets pick what they need
                             // OR map data streams in the registry.
-                            if (widgetId === 'bollinger_band') {
+                            if (widgetId === 'bollinger_band' || widgetId === 'rsi_chart') {
                                 dynamicProps = {
                                     data: data,
-                                    title: `Volatility Analysis (${filters.asset}/${filters.currency})`
+                                    title: widgetId === 'rsi_chart' ? 'Relative Strength Index' : `Volatility Analysis (${filters.asset}/${filters.currency})`
                                 };
                             }
                             if (widgetId === 'sentiment_gauge') {

@@ -52,3 +52,53 @@ export const calculateBollingerBands = (data, windowSize = 5) => {
         };
     });
 };
+
+// Helper to calculate Relative Strength Index (RSI)
+// Formula: RSI = 100 - (100 / (1 + RS))
+// RS = Average Gain / Average Loss
+export const calculateRSI = (data, period = 14) => {
+    let gains = 0;
+    let losses = 0;
+
+    // 1. Calculate initial Average Gain/Loss (Simple Average)
+    // We need at least 'period' data points before we can calculate the first RSI
+    for (let i = 1; i <= period; i++) {
+        if (!data[i]) return data; // Not enough data
+        const change = data[i].price - data[i - 1].price;
+        if (change > 0) gains += change;
+        else losses += Math.abs(change);
+    }
+
+    let avgGain = gains / period;
+    let avgLoss = losses / period;
+
+    return data.map((entry, index) => {
+        // RSI not available for the first 'period' points
+        if (index < period) return { ...entry, rsi: null };
+
+        // For subsequent points, use the Smoothed Moving Average method (Wilder's Smoothing)
+        // However, for simplicity and since we recalculate the whole array roughly, 
+        // we can iterate from the start. 
+        // But map() doesn't carry state easily without closure.
+        // Let's implement a stateful loop instead of map or use a simple loop.
+
+        // RE-IMPLEMENTATION: It's better to loop once rather than use map for this dependent logic.
+        return entry;
+    }).map((entry, index, arr) => {
+        if (index < period) return { ...entry, rsi: null };
+
+        const currentChange = entry.price - arr[index - 1].price;
+        let currentGain = currentChange > 0 ? currentChange : 0;
+        let currentLoss = currentChange < 0 ? Math.abs(currentChange) : 0;
+
+        // Wilder's Smoothing
+        avgGain = ((avgGain * (period - 1)) + currentGain) / period;
+        avgLoss = ((avgLoss * (period - 1)) + currentLoss) / period;
+
+        const rs = avgLoss === 0 ? 100 : avgGain / avgLoss;
+        const rsi = 100 - (100 / (1 + rs));
+
+        return { ...entry, rsi: parseFloat(rsi.toFixed(2)) };
+    });
+};
+
