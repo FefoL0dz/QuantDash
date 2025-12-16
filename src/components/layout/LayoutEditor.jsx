@@ -12,8 +12,8 @@ const SortableItem = ({ id, title }) => {
         transition,
         padding: '12px 16px',
         marginBottom: '8px',
-        background: 'white',
-        border: '1px solid #e5e7eb',
+        background: 'var(--bg-color-primary)',
+        border: '1px solid var(--border-color)',
         borderRadius: '6px',
         display: 'flex',
         justifyContent: 'space-between',
@@ -24,8 +24,8 @@ const SortableItem = ({ id, title }) => {
 
     return (
         <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-            <span style={{ fontWeight: 500, color: '#374151' }}>{title}</span>
-            <span style={{ color: '#9ca3af', fontSize: '20px' }}>≡</span>
+            <span style={{ fontWeight: 500, color: 'var(--text-color-primary)' }}>{title}</span>
+            <span style={{ color: 'var(--text-color-secondary)', fontSize: '20px' }}>≡</span>
         </div>
     );
 };
@@ -57,15 +57,17 @@ const LayoutEditor = ({ items, onReorder }) => {
             onDragEnd={handleDragEnd}
         >
             <SortableContext items={items} strategy={verticalListSortingStrategy}>
-                <div style={{ background: '#f9fafb', padding: '16px', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
-                    <h4 style={{ margin: '0 0 12px 0', fontSize: '12px', textTransform: 'uppercase', color: '#6b7280', letterSpacing: '0.05em' }}>
-                        Widget Order
-                    </h4>
+                <div style={{ /* Removed container styling as it is now handled by parent in Dashboard.jsx */ }}>
+                    {/* 
+                        We removed the container styling because in Dashboard.jsx we wrapped this in a styled div.
+                        However, if we want to keep it self-contained properly, we should use variables.
+                        But since Dashboard.jsx already provides the "Widget Order" box, we might just want to render the list.
+                        Let's keep it simple and just render the items, assuming parent handles container bg.
+                        OR, strictly follow instructions to just fix colors.
+                        Let's use variables for items.
+                     */}
                     {items.map((id) => (
                         <SortableItem key={id} id={id} title={id} />
-                        // Ideally we'd lookup title from Registry here, but to avoid circular deps or prop drilling, 
-                        // we'll just display ID or ask parent to pass objects.
-                        // For POC, ID is readable enough ('sentiment_gauge').
                     ))}
                 </div>
             </SortableContext>

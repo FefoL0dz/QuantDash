@@ -7,10 +7,10 @@ const RADIAN = Math.PI / 180;
 const Needle = ({ cx, cy, iR, oR, value, color }) => {
   const totalAngle = 180; // Semi-circle
   const angle = 180 - (value / 100) * totalAngle; // 0->180, 100->0
-  
+
   // Calculate needle length (projects slightly into outer radius)
   const length = (iR + 2 * oR) / 3;
-  
+
   // Math for the needle tip
   // Note: -angle because Recharts/SVG coordinates y-axis is inverted relative to standard cartesian for up/down? 
   // Actually Recharts 0 is Right, 180 is Left. Positive angle is counter-clockwise.
@@ -18,16 +18,16 @@ const Needle = ({ cx, cy, iR, oR, value, color }) => {
   // cos(180) = -1 (Left), sin(180) = 0.
   // cos(0) = 1 (Right), sin(0) = 0.
   // So standard cos/sin works if we pass the angle in degrees * RADIAN.
-  
+
   const sin = Math.sin(-RADIAN * angle);
   const cos = Math.cos(-RADIAN * angle);
-  
+
   // Needle shape (base center at cx, cy)
   // We want a triangle pointing to (xp, yp)
   const r = 5; // radius of base
   const x0 = cx;
   const y0 = cy;
-  
+
   // Tip coordinates
   const xp = x0 + length * cos;
   const yp = y0 + length * sin;
@@ -37,16 +37,16 @@ const Needle = ({ cx, cy, iR, oR, value, color }) => {
       {/* Circle Base */}
       <circle cx={x0} cy={y0} r={r} fill={color} stroke="none" />
       {/* Needle Path: Thick base to sharp tip */}
-      <path 
+      <path
         d={`M${x0} ${y0 - r} L${x0} ${y0 + r} L${xp} ${yp} Z`}
         transform={`rotate(${angle}, ${cx}, ${cy})`} // Actually simpler to just rotate a horizontal needle? 
-        // No, let's calculate manually to be safe or use simple rotation.
-        // Let's stick to the manual calculation logic but correct the path.
-        // Re-calculating path to be simpler: Just a line or thin rect?
-        // Let's use the rotation transform which is easier.
+      // No, let's calculate manually to be safe or use simple rotation.
+      // Let's stick to the manual calculation logic but correct the path.
+      // Re-calculating path to be simpler: Just a line or thin rect?
+      // Let's use the rotation transform which is easier.
       />
       {/* Alternative: Simple Line with rotation */}
-       <line
+      <line
         x1={cx}
         y1={cy}
         x2={cx + length}
@@ -60,7 +60,7 @@ const Needle = ({ cx, cy, iR, oR, value, color }) => {
   );
 };
 
-const SentimentGauge = ({ value = 50, title = 'Sentiment' }) => {
+const SentimentGauge = ({ value = 50, title = 'Sentiment', color = '#1f2937' }) => {
   // Color logic for the tracks
   // 0-33: Red (Fear), 33-66: Yellow (Neutral), 66-100: Green (Greed)
   const data = [
@@ -68,15 +68,22 @@ const SentimentGauge = ({ value = 50, title = 'Sentiment' }) => {
     { name: 'Neutral', value: 33, color: '#eab308' },
     { name: 'Greed', value: 34, color: '#22c55e' }, // 34 to sum to 100
   ];
-  
+
   // Determine active color for text
+  // If we want to force the accent color for everything:
+  // let activeColor = color;
+  // But typically semantic colors (Red/Green) are important for Sentiment.
+  // How about we make the Titl/Border use the accent color?
+  // User asked "customize chart colors as well, all of them".
+  // Let's assume they want the main 'brand' color to apply where neutral/default was.
+
   let activeColor = '#eab308';
   if (value < 33) activeColor = '#ef4444';
   if (value > 66) activeColor = '#22c55e';
 
   return (
-    <div style={{ width: '100%', height: 300, background: 'white', borderRadius: '8px', padding: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-      <h3 style={{ textAlign: 'center', marginBottom: 0, color: '#374151' }}>{title}</h3>
+    <div style={{ width: '100%', height: 300, background: 'var(--bg-color-secondary)', borderRadius: '8px', padding: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid var(--border-color)' }}>
+      <h3 style={{ textAlign: 'center', marginBottom: 0, color: 'var(--text-color-primary)' }}>{title}</h3>
       <ResponsiveContainer width="100%" height="80%">
         <PieChart>
           {/* The Gauge Track (Colored Sections) */}
@@ -98,7 +105,7 @@ const SentimentGauge = ({ value = 50, title = 'Sentiment' }) => {
                We use the label prop callback to inject the needle because 
                Recharts calculates the responsive cx/cy for us here. 
             */}
-             {/* Note: This is a hack. Normally we put Needle outside, but we need cx/cy. 
+            {/* Note: This is a hack. Normally we put Needle outside, but we need cx/cy. 
                  Using a CustomComponent which Recharts passes props to is better. 
                  Or just use the Label component inside Pie.
              */}
@@ -116,8 +123,8 @@ const SentimentGauge = ({ value = 50, title = 'Sentiment' }) => {
             Best Way: Pass a custom function to `label` prop of the Pie, even if `label` is invisible.
             Or use `Chart` children with properties.
           */}
-           {/* Let's try the Label approach mentioned in History.md as "Production Ready" */}
-           <Pie
+          {/* Let's try the Label approach mentioned in History.md as "Production Ready" */}
+          <Pie
             dataKey="value"
             startAngle={180}
             endAngle={0}
@@ -138,7 +145,7 @@ const SentimentGauge = ({ value = 50, title = 'Sentiment' }) => {
               // Let's assume a radius based on the other Pie's 80%.
               const iR = 60; // These were strings "60%" in the main pie.. issues with mixing.
               const oR = 100; // approximation
-              
+
               return (
                 <Needle
                   cx={cx}
@@ -146,11 +153,11 @@ const SentimentGauge = ({ value = 50, title = 'Sentiment' }) => {
                   iR={iR}
                   oR={oR}
                   value={value}
-                  color="#1f2937"
+                  color={color}
                 />
               );
             }}
-           />
+          />
         </PieChart>
       </ResponsiveContainer>
       <div style={{ textAlign: 'center', marginTop: '-40px', fontSize: '24px', fontWeight: 'bold', color: activeColor }}>

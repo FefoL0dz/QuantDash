@@ -10,10 +10,10 @@ import {
     ReferenceLine
 } from 'recharts';
 
-const RSIChart = ({ data = [], title = 'Relative Strength Index (RSI)' }) => {
+const RSIChart = ({ data = [], title = 'Relative Strength Index (RSI)', color = '#8b5cf6' }) => {
     return (
-        <div style={{ width: '100%', height: 250, background: 'white', borderRadius: '8px', padding: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-            <h3 style={{ margin: '0 0 10px 0', color: '#374151', fontSize: '14px' }}>{title}</h3>
+        <div style={{ width: '100%', height: 250, background: 'var(--bg-color-secondary)', borderRadius: '8px', padding: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid var(--border-color)' }}>
+            <h3 style={{ margin: '0 0 10px 0', color: 'var(--text-color-primary)', fontSize: '14px' }}>{title}</h3>
 
             <ResponsiveContainer width="100%" height="85%">
                 <LineChart
@@ -25,10 +25,10 @@ const RSIChart = ({ data = [], title = 'Relative Strength Index (RSI)' }) => {
                         left: 0,
                     }}
                 >
-                    <CartesianGrid stroke="#f3f4f6" vertical={false} />
+                    <CartesianGrid stroke="var(--border-color)" vertical={false} />
                     <XAxis
                         dataKey="time"
-                        tick={{ fontSize: 10, fill: '#9ca3af' }}
+                        tick={{ fontSize: 10, fill: 'var(--text-color-secondary)' }}
                         axisLine={false}
                         tickLine={false}
                         minTickGap={30}
@@ -36,12 +36,19 @@ const RSIChart = ({ data = [], title = 'Relative Strength Index (RSI)' }) => {
                     <YAxis
                         domain={[0, 100]}
                         ticks={[0, 30, 70, 100]}
-                        tick={{ fontSize: 10, fill: '#9ca3af' }}
+                        tick={{ fontSize: 10, fill: 'var(--text-color-secondary)' }}
                         axisLine={false}
                         tickLine={false}
                     />
                     <Tooltip
-                        contentStyle={{ borderRadius: '4px', border: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', fontSize: '12px' }}
+                        contentStyle={{
+                            borderRadius: '4px',
+                            border: 'none',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                            fontSize: '12px',
+                            background: 'var(--bg-color-secondary)',
+                            color: 'var(--text-color-primary)'
+                        }}
                     />
 
                     {/* Overbought / Oversold Zones */}
@@ -51,7 +58,7 @@ const RSIChart = ({ data = [], title = 'Relative Strength Index (RSI)' }) => {
                     <Line
                         type="monotone"
                         dataKey="rsi"
-                        stroke="#8b5cf6"
+                        stroke={color}
                         strokeWidth={2}
                         dot={false}
                     />
