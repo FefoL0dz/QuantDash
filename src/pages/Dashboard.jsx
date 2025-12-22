@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { WIDGET_REGISTRY } from '../config/widgetRegistry';
+import LineBarAreaDemo from '../pages/Demo/LineBarAreaDemo';
 import LayoutEditor from '../components/layout/LayoutEditor';
 import { useMarketData } from '../hooks/useMarketData';
 import { useFilters } from '../context/FilterContext';
@@ -99,7 +100,8 @@ const Dashboard = () => {
     const [widgetOrder, setWidgetOrder] = useState([
         'sentiment_gauge',
         'bollinger_band',
-        'rsi_chart'
+        'rsi_chart',
+        'line_bar_area_demo'
     ]);
 
     const [isConfigOpen, setIsConfigOpen] = useState(false);
@@ -167,6 +169,11 @@ const Dashboard = () => {
                                     value: mockVal,
                                     title: `Market Sentiment (${filters.asset})`,
                                     color: accentColor // Pass the dynamic color
+                                };
+                            }
+                            if (widgetId === 'line_bar_area_demo') {
+                                dynamicProps = {
+                                    accentColor,
                                 };
                             }
 
