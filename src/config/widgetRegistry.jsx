@@ -2,9 +2,16 @@ import SentimentGauge from '@/components/structure/Charts/SentimentGauge/Sentime
 import BollingerChart from '@/components/structure/Charts/BollingerChart/BollingerChart';
 import RSIChart from '@/components/structure/Charts/RSIChart/RSIChart';
 import LineBarAreaDemo from '@/pages/Demo/LineBarAreaDemo';
+import ProgressRingChart from '@/components/structure/Charts/ProgressRingChart/ProgressRingChart';
 
 // Central registry that lets dashboard layouts reference widgets by ID.
 export const WIDGET_REGISTRY = {
+  progress_ring: {
+    id: 'progress_ring',
+    title: 'Acceptance Level',
+    component: ProgressRingChart,
+    defaultProps: { value: 75 },
+  },
   sentiment_gauge: {
     id: 'sentiment_gauge',
     title: 'Market Sentiment',

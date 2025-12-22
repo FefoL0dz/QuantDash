@@ -101,6 +101,7 @@ const Dashboard = () => {
         'sentiment_gauge',
         'bollinger_band',
         'rsi_chart',
+        'progress_ring',
         'line_bar_area_demo'
     ]);
 
