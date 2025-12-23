@@ -102,7 +102,8 @@ const Dashboard = () => {
         'bollinger_band',
         'rsi_chart',
         'progress_ring',
-        'line_bar_area_demo'
+        'line_bar_area_demo',
+        'navios_chart'
     ]);
 
     const [isConfigOpen, setIsConfigOpen] = useState(false);
