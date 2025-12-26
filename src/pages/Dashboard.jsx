@@ -103,7 +103,8 @@ const Dashboard = () => {
         'rsi_chart',
         'progress_ring',
         'line_bar_area_demo',
-        'navios_chart'
+        'navios_chart',
+        'external_stops_chart'
     ]);
 
     const [isConfigOpen, setIsConfigOpen] = useState(false);

@@ -4,6 +4,7 @@ import RSIChart from '@/components/structure/Charts/RSIChart/RSIChart';
 import LineBarAreaDemo from '@/pages/Demo/LineBarAreaDemo';
 import ProgressRingChart from '@/components/structure/Charts/ProgressRingChart/ProgressRingChart';
 import NaviosChart from '@/components/structure/Charts/NaviosChart/NaviosChart';
+import ExternalStopsChart from '@/components/structure/Charts/ExternalStopsChart/ExternalStopsChart';
 
 // Central registry that lets dashboard layouts reference widgets by ID.
 export const WIDGET_REGISTRY = {
@@ -41,6 +42,12 @@ export const WIDGET_REGISTRY = {
     id: 'navios_chart',
     title: 'Navios Analysis',
     component: NaviosChart,
+    defaultProps: {},
+  },
+  external_stops_chart: {
+    id: 'external_stops_chart',
+    title: 'External Stops Analysis',
+    component: ExternalStopsChart,
     defaultProps: {},
   },
 };
